@@ -30,6 +30,8 @@ import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndEnclosureImpl;
 import com.rometools.rome.feed.synd.SyndEntry;
 
+/**
+ */
 public class ConverterForRSS092 extends ConverterForRSS091Userland {
 
     public ConverterForRSS092() {

@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author Alejandro Abdelnur
+ */
 public class XmlFixerReader extends Reader {
 
     protected Reader in;

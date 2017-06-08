@@ -29,6 +29,9 @@ import com.rometools.rome.io.FeedException;
 /**
  * Feed Generator for RSS 1.0
  * <p/>
+ *
+ * @author Elaine Chien
+ *
  */
 
 public class RSS10Generator extends RSS090Generator {

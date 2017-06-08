@@ -40,6 +40,10 @@ import com.rometools.rome.io.impl.FeedGenerators;
  * <p>
  * It generates all flavors of RSS (0.90, 0.91, 0.92, 0.93, 0.94, 1.0 and 2.0) and Atom 0.3 feeds.
  * Generators are plugable (they must implement the ModuleParser interface).
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class WireFeedOutput {
     private static Map<ClassLoader, FeedGenerators> clMap = new WeakHashMap<ClassLoader, FeedGenerators>();
@@ -181,11 +185,8 @@ public class WireFeedOutput {
      */
     public void output(final WireFeed feed, final File file, final boolean prettyPrint) throws IllegalArgumentException, IOException, FeedException {
         final Writer writer = new FileWriter(file);
-        try {
-            this.output(feed, writer, prettyPrint);
-        } finally {
-            writer.close();
-        }
+        this.output(feed, writer, prettyPrint);
+        writer.close();
     }
 
     /**

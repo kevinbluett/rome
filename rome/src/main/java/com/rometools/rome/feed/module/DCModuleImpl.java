@@ -34,6 +34,8 @@ import com.rometools.utils.Lists;
  * <p>
  *
  * @see <a href="http://web.resource.org/rss/1.0/modules/dc/">Dublin Core module</a>.
+ * @author Alejandro Abdelnur
+ *
  */
 public class DCModuleImpl extends ModuleImpl implements DCModule {
 
@@ -87,6 +89,11 @@ public class DCModuleImpl extends ModuleImpl implements DCModule {
         IGNORE_PROPERTIES.add("rights");
     }
 
+    /**
+     * Default constructor. All properties are set to <b>null</b>.
+     * <p>
+     *
+     */
     public DCModuleImpl() {
         super(DCModule.class, URI);
         objBean = new ObjectBean(DCModule.class, this, CONVENIENCE_PROPERTIES);

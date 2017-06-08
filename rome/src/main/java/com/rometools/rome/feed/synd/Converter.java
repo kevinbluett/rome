@@ -27,6 +27,10 @@ import com.rometools.rome.feed.WireFeed;
  * Implementations must be thread safe.
  * <p>
  * TODO: explain how developers can plugin their own implementations.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public interface Converter {
 

@@ -23,6 +23,10 @@ import com.rometools.rome.feed.impl.ObjectBean;
 
 /**
  * Bean for item enclosures of RSS feeds.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class Enclosure implements Cloneable, Serializable {
     private static final long serialVersionUID = 1L;
@@ -31,6 +35,11 @@ public class Enclosure implements Cloneable, Serializable {
     private long length;
     private String type;
 
+    /**
+     * Default constructor. All properties are set to <b>null</b>.
+     * <p>
+     *
+     */
     public Enclosure() {
         objBean = new ObjectBean(this.getClass(), this);
     }

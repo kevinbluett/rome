@@ -32,6 +32,9 @@ import com.rometools.rome.io.ModuleGenerator;
 /**
  * Feed Generator for SY ModuleImpl
  * <p/>
+ *
+ * @author Elaine Chien
+ *
  */
 public class SyModuleGenerator implements ModuleGenerator {
 

@@ -19,6 +19,8 @@ package com.rometools.rome.feed.synd;
 
 /**
  * Represents a link or enclosure associated with entry.
+ *
+ * @author Dave Johnson
  */
 public interface SyndLink {
     /**

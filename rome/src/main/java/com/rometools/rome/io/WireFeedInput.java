@@ -51,6 +51,10 @@ import com.rometools.rome.io.impl.XmlFixerReader;
  * Parsers are plugable (they must implement the WireFeedParser interface).
  * <p>
  * The WireFeedInput useds liberal parsers.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class WireFeedInput {
 
@@ -63,7 +67,6 @@ public class WireFeedInput {
     private final Locale locale;
 
     private boolean xmlHealerOn;
-    private boolean allowDoctypes = false;
 
     private static FeedParsers getFeedParsers() {
         synchronized (WireFeedInput.class) {
@@ -160,27 +163,6 @@ public class WireFeedInput {
     public boolean getXmlHealerOn() {
         return xmlHealerOn;
     }
-    
-    /**
-     * Indicates whether Doctype declarations are allowed.
-     *  
-     * @return true when Doctype declarations are allowed, false otherwise
-     */
-    public boolean isAllowDoctypes() {
-        return allowDoctypes;
-    }
-
-    /**
-     * Since ROME 1.5.1 we fixed a security vulnerability by disallowing Doctype declarations by default. 
-     * This change breaks the compatibility with at least RSS 0.91N because it requires a Doctype declaration. 
-     * You are able to allow Doctype declarations again with this property. You should only activate it 
-     * when the feeds that you process are absolutely trustful. 
-     *  
-     * @param allowDoctypes true when Doctype declarations should be allowed again, false otherwise
-     */
-    public void setAllowDoctypes(boolean allowDoctypes) {
-        this.allowDoctypes = allowDoctypes;
-    }
 
     /**
      * Builds an WireFeed (RSS or Atom) from a file.
@@ -200,14 +182,11 @@ public class WireFeedInput {
     public WireFeed build(final File file) throws FileNotFoundException, IOException, IllegalArgumentException, FeedException {
         WireFeed feed;
         Reader reader = new FileReader(file);
-        try {
-            if (xmlHealerOn) {
-                reader = new XmlFixerReader(reader);
-            }
-            feed = this.build(reader);
-        } finally {
-            reader.close();
+        if (xmlHealerOn) {
+            reader = new XmlFixerReader(reader);
         }
+        feed = this.build(reader);
+        reader.close();
         return feed;
     }
 
@@ -343,42 +322,40 @@ public class WireFeedInput {
         //
         // Crimson is one parser which is known not to support these features.
         try {
-            
             final XMLReader parser = saxBuilder.createParser();
-            
-            setFeature(saxBuilder, parser, "http://xml.org/sax/features/external-general-entities", false);
-            setFeature(saxBuilder, parser, "http://xml.org/sax/features/external-parameter-entities", false);
-            setFeature(saxBuilder, parser, "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            try {
+                parser.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                saxBuilder.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            } catch (final SAXNotRecognizedException e) {
+                // ignore
+            } catch (final SAXNotSupportedException e) {
+                // ignore
+            }
 
-            if(!allowDoctypes) {
-                setFeature(saxBuilder, parser, "http://apache.org/xml/features/disallow-doctype-decl", true);
+            try {
+                parser.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                saxBuilder.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            } catch (final SAXNotRecognizedException e) {
+                // ignore
+            } catch (final SAXNotSupportedException e) {
+                // ignore
+            }
+
+            try {
+                parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+                saxBuilder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            } catch (final SAXNotRecognizedException e) {
+                // ignore
+            } catch (final SAXNotSupportedException e) {
+                // ignore
             }
 
         } catch (final JDOMException e) {
-            throw new IllegalStateException("JDOM could not create a SAX parser", e);
+            throw new IllegalStateException("JDOM could not create a SAX parser");
         }
-        
+
         saxBuilder.setExpandEntities(false);
-
         return saxBuilder;
-
-    }
-    
-    private void setFeature(SAXBuilder saxBuilder, XMLReader parser, String feature, boolean value) {
-        if (isFeatureSupported(parser, feature, value)) {
-            saxBuilder.setFeature(feature, value);
-        }
-    }
-
-    private boolean isFeatureSupported(XMLReader parser, String feature, boolean value) {
-        try {
-            parser.setFeature(feature, value);
-            return true;
-        } catch (final SAXNotRecognizedException e) {
-            return false;
-        } catch (final SAXNotSupportedException e) {
-            return false;
-        }
     }
 
 }

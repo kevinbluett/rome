@@ -36,6 +36,8 @@ import com.rometools.rome.feed.synd.SyndImage;
 import com.rometools.rome.feed.synd.SyndImageImpl;
 import com.rometools.rome.feed.synd.SyndLink;
 
+/**
+ */
 public class ConverterForRSS090 implements Converter {
     private final String type;
 
@@ -88,8 +90,6 @@ public class ConverterForRSS090 implements Converter {
         syndImage.setTitle(rssImage.getTitle());
         syndImage.setUrl(rssImage.getUrl());
         syndImage.setLink(rssImage.getLink());
-        syndImage.setWidth(rssImage.getWidth());
-        syndImage.setHeight(rssImage.getHeight());
         return syndImage;
     }
 
@@ -180,8 +180,6 @@ public class ConverterForRSS090 implements Converter {
         image.setTitle(sImage.getTitle());
         image.setUrl(sImage.getUrl());
         image.setLink(sImage.getLink());
-        image.setHeight(sImage.getHeight());
-        image.setWidth(sImage.getWidth());
         return image;
     }
 

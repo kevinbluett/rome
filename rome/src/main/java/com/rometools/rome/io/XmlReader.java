@@ -53,6 +53,10 @@ import java.util.regex.Pattern;
  * by Mark Pilgrim in his blog, <a
  * href="http://diveintomark.org/archives/2004/02/13/xml-media-types"> Determining the character
  * encoding of a feed</a>.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class XmlReader extends Reader {
 
@@ -62,7 +66,6 @@ public class XmlReader extends Reader {
     private static final String UTF_16BE = "UTF-16BE";
     private static final String UTF_16LE = "UTF-16LE";
     private static final String UTF_16 = "UTF-16";
-    private static final String CP1047 = "CP1047";
     private static final Pattern CHARSET_PATTERN = Pattern.compile("charset=([.[^; ]]*)");
     private static final Pattern ENCODING_PATTERN = Pattern.compile("<\\?xml.*encoding[\\s]*=[\\s]*((?:\".[^\"]*\")|(?:'.[^']*'))", Pattern.MULTILINE);
     private static final MessageFormat RAW_EX_1 = new MessageFormat("Invalid encoding, BOM [{0}] XML guess [{1}] XML prolog [{2}] encoding mismatch");
@@ -515,7 +518,7 @@ public class XmlReader extends Reader {
     private String calculateHttpEncoding(final String cTMime, final String cTEnc, final String bomEnc, final String xmlGuessEnc, final String xmlEnc,
             final InputStream is, final boolean lenient) throws IOException {
         String encoding;
-        if (lenient && xmlEnc != null) {
+        if (lenient & xmlEnc != null) {
             encoding = xmlEnc;
         } else {
             final boolean appXml = isAppXml(cTMime);
@@ -618,7 +621,7 @@ public class XmlReader extends Reader {
     }
 
     // returns the best guess for the encoding by looking the first bytes of the
-    // stream, '<?xm'
+    // stream, '<?'
     private static String getXMLGuessEncoding(final BufferedInputStream is) throws IOException {
         String encoding = null;
         final int[] bytes = new int[4];
@@ -635,14 +638,12 @@ public class XmlReader extends Reader {
             encoding = UTF_16LE;
         } else if (bytes[0] == 0x3C && bytes[1] == 0x3F && bytes[2] == 0x78 && bytes[3] == 0x6D) {
             encoding = UTF_8;
-        } else if (bytes[0] == 0x4C && bytes[1] == 0x6F && bytes[2] == 0xA7 && bytes[3] == 0x94) {
-            encoding = CP1047;
         }
         return encoding;
     }
 
     // returns the encoding declared in the <?xml encoding=...?>, NULL if none
-    static String getXmlProlog(final InputStream is, final String guessedEnc) throws IOException {
+    private static String getXmlProlog(final BufferedInputStream is, final String guessedEnc) throws IOException {
         String encoding = null;
         if (guessedEnc != null) {
             final byte[] bytes = new byte[BUFFER_SIZE];
@@ -655,7 +656,7 @@ public class XmlReader extends Reader {
                 offset += c;
                 max -= c;
                 c = is.read(bytes, offset, max);
-                firstGT = new String(bytes, 0, offset, guessedEnc).indexOf(">");
+                firstGT = new String(bytes, 0, offset).indexOf(">");
             }
             if (firstGT == -1) {
                 if (c == -1) {
@@ -667,7 +668,14 @@ public class XmlReader extends Reader {
             final int bytesRead = offset;
             if (bytesRead > 0) {
                 is.reset();
-                String prolog = new String(bytes, guessedEnc).substring(0, firstGT);
+                final Reader reader = new InputStreamReader(new ByteArrayInputStream(bytes, 0, firstGT + 1), guessedEnc);
+                final BufferedReader bReader = new BufferedReader(reader);
+                final StringBuffer prolog = new StringBuffer();
+                String line = bReader.readLine();
+                while (line != null) {
+                    prolog.append(line);
+                    line = bReader.readLine();
+                }
                 final Matcher m = ENCODING_PATTERN.matcher(prolog);
                 if (m.find()) {
                     encoding = m.group(1).toUpperCase(Locale.ENGLISH);

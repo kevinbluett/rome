@@ -29,6 +29,10 @@ import com.rometools.rome.feed.synd.SyndFeed;
  * out of an SyndFeedImpl..
  * <p>
  * It delegates to a WireFeedOutput to generate all feed types.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class SyndFeedOutput {
 

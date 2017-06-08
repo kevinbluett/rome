@@ -37,6 +37,10 @@ import com.rometools.utils.Lists;
  * <p>
  * For RSS1.0 it supports Dublin Core and Syndication modules. Note that those modules currently
  * support simple syntax format only.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class Item implements Cloneable, Serializable, Extendable {
 
@@ -60,6 +64,11 @@ public class Item implements Cloneable, Serializable, Extendable {
     private List<Module> modules;
     private List<Element> foreignMarkup;
 
+    /**
+     * Default constructor. All properties are set to <b>null</b>.
+     * <p>
+     *
+     */
     public Item() {
         objBean = new ObjectBean(this.getClass(), this);
     }

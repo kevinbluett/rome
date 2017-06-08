@@ -46,6 +46,10 @@ import com.rometools.utils.Lists;
  * <p>
  * It handles all RSS versions, Atom 0.3 and Atom 1.0, it normalizes all info, it may lose
  * information.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class SyndFeedImpl implements Serializable, SyndFeed {
 
@@ -146,6 +150,11 @@ public class SyndFeedImpl implements Serializable, SyndFeed {
         objBean = new ObjectBean(beanClass, this, convenienceProperties);
     }
 
+    /**
+     * Default constructor. All properties are set to <b>null</b>.
+     * <p>
+     *
+     */
     public SyndFeedImpl() {
         this(null);
     }
@@ -166,6 +175,9 @@ public class SyndFeedImpl implements Serializable, SyndFeed {
      * Creates a SyndFeedImpl and populates all its properties out of the given RSS Channel or Atom
      * Feed properties, while optionally preserving the WireFeed for access via the
      * orignalWireFeed() method.
+     *
+     * @param feed
+     * @param preserveWireFeed
      */
     public SyndFeedImpl(final WireFeed feed, final boolean preserveWireFeed) {
         this(SyndFeed.class, IGNORE_PROPERTIES);

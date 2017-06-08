@@ -16,6 +16,9 @@
  */
 package com.rometools.rome.feed.impl;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -29,6 +32,10 @@ import java.util.Set;
  * Obtains all property descriptors from a bean (interface or implementation).
  * <p>
  * The java.beans.Introspector does not process the interfaces hierarchy chain, this one does.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class BeanIntrospector {
 
@@ -37,9 +44,6 @@ public class BeanIntrospector {
     private static final String GETTER = "get";
     private static final String BOOLEAN_GETTER = "is";
 
-    private BeanIntrospector() {
-    }
-
     /**
      * Extract all {@link PropertyDescriptor}s for properties with getters and setters for the given
      * class.
@@ -47,8 +51,10 @@ public class BeanIntrospector {
      * @param clazz The class to extract the desired {@link PropertyDescriptor}s from
      * @return All {@link PropertyDescriptor} for properties with getters and setters for the given
      *         class.
+     * @throws IntrospectionException When the extraction of the desired {@link PropertyDescriptor}s
+     *             failed
      */
-    private static synchronized PropertyDescriptor[] getPropertyDescriptors(final Class<?> clazz) {
+    private static synchronized PropertyDescriptor[] getPropertyDescriptors(final Class<?> clazz) throws IntrospectionException {
         PropertyDescriptor[] descriptors = introspected.get(clazz);
         if (descriptors == null) {
             descriptors = getPDs(clazz);
@@ -64,8 +70,10 @@ public class BeanIntrospector {
      * @param clazz The class to extract the desired {@link PropertyDescriptor}s from
      * @return All {@link PropertyDescriptor}s for properties with a getter that does not come from
      *         {@link Object} and does not accept parameters.
+     * @throws IntrospectionException When the extraction of the desired {@link PropertyDescriptor}s
+     *             failed
      */
-    public static List<PropertyDescriptor> getPropertyDescriptorsWithGetters(final Class<?> clazz) {
+    public static List<PropertyDescriptor> getPropertyDescriptorsWithGetters(final Class<?> clazz) throws IntrospectionException {
 
         final List<PropertyDescriptor> relevantDescriptors = new ArrayList<PropertyDescriptor>();
 
@@ -101,8 +109,10 @@ public class BeanIntrospector {
      * @param clazz The class to extract the desired {@link PropertyDescriptor}s from
      * @return All {@link PropertyDescriptor}s for properties with a getter (that does not come from
      *         {@link Object} and does not accept parameters) and a setter.
+     * @throws IntrospectionException When the extraction of the desired {@link PropertyDescriptor}s
+     *             failed
      */
-    public static List<PropertyDescriptor> getPropertyDescriptorsWithGettersAndSetters(final Class<?> clazz) {
+    public static List<PropertyDescriptor> getPropertyDescriptorsWithGettersAndSetters(final Class<?> clazz) throws IntrospectionException {
 
         final List<PropertyDescriptor> relevantDescriptors = new ArrayList<PropertyDescriptor>();
 
@@ -122,7 +132,7 @@ public class BeanIntrospector {
 
     }
 
-    private static PropertyDescriptor[] getPDs(final Class<?> clazz) {
+    private static PropertyDescriptor[] getPDs(final Class<?> clazz) throws IntrospectionException {
         final Method[] methods = clazz.getMethods();
         final Map<String, PropertyDescriptor> getters = getPDs(methods, false);
         final Map<String, PropertyDescriptor> setters = getPDs(methods, true);
@@ -130,7 +140,7 @@ public class BeanIntrospector {
         return propertyDescriptors.toArray(new PropertyDescriptor[propertyDescriptors.size()]);
     }
 
-    private static Map<String, PropertyDescriptor> getPDs(final Method[] methods, final boolean setters) {
+    private static Map<String, PropertyDescriptor> getPDs(final Method[] methods, final boolean setters) throws IntrospectionException {
 
         final Map<String, PropertyDescriptor> pds = new HashMap<String, PropertyDescriptor>();
 
@@ -148,15 +158,15 @@ public class BeanIntrospector {
 
                 if (setters) {
                     if (methodName.startsWith(SETTER) && returnType == void.class && nrOfParameters == 1) {
-                        propertyName = decapitalize(methodName.substring(3));
+                        propertyName = Introspector.decapitalize(methodName.substring(3));
                         propertyDescriptor = new PropertyDescriptor(propertyName, null, method);
                     }
                 } else {
                     if (methodName.startsWith(GETTER) && returnType != void.class && nrOfParameters == 0) {
-                        propertyName = decapitalize(methodName.substring(3));
+                        propertyName = Introspector.decapitalize(methodName.substring(3));
                         propertyDescriptor = new PropertyDescriptor(propertyName, method, null);
                     } else if (methodName.startsWith(BOOLEAN_GETTER) && returnType == boolean.class && nrOfParameters == 0) {
-                        propertyName = decapitalize(methodName.substring(2));
+                        propertyName = Introspector.decapitalize(methodName.substring(2));
                         propertyDescriptor = new PropertyDescriptor(propertyName, method, null);
                     }
                 }
@@ -172,7 +182,8 @@ public class BeanIntrospector {
 
     }
 
-    private static List<PropertyDescriptor> merge(final Map<String, PropertyDescriptor> getters, final Map<String, PropertyDescriptor> setters) {
+    private static List<PropertyDescriptor> merge(final Map<String, PropertyDescriptor> getters, final Map<String, PropertyDescriptor> setters)
+            throws IntrospectionException {
 
         final List<PropertyDescriptor> props = new ArrayList<PropertyDescriptor>();
         final Set<String> processedProps = new HashSet<String>();
@@ -200,16 +211,4 @@ public class BeanIntrospector {
         return props;
     }
 
-    /**
-     * Make first character lower case unless the second character is upper case.
-     */
-    private static String decapitalize(String name) {
-        if (name.isEmpty() || (name.length() > 1 && Character.isUpperCase(name.charAt(1)))) {
-            return name;
-        }
-
-        char[] chars = name.toCharArray();
-        chars[0] = Character.toLowerCase(chars[0]);
-        return new String(chars);
-    }
 }

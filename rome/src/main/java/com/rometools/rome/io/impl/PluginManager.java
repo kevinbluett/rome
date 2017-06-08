@@ -30,6 +30,12 @@ import com.rometools.rome.io.DelegatingModuleParser;
 import com.rometools.rome.io.WireFeedGenerator;
 import com.rometools.rome.io.WireFeedParser;
 
+/**
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
+ */
 public abstract class PluginManager<T> {
 
     private final String[] propertyValues;

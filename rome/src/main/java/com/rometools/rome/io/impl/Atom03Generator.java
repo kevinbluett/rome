@@ -40,6 +40,9 @@ import com.rometools.utils.Lists;
 /**
  * Feed Generator for Atom
  * <p/>
+ *
+ * @author Elaine Chien
+ *
  */
 
 public class Atom03Generator extends BaseWireFeedGenerator {
@@ -280,7 +283,7 @@ public class Atom03Generator extends BaseWireFeedGenerator {
 
         final String rel = link.getRel();
         if (rel != null) {
-            final Attribute relAttribute = new Attribute("rel", rel);
+            final Attribute relAttribute = new Attribute("rel", rel.toString());
             linkElement.setAttribute(relAttribute);
         }
 
@@ -348,7 +351,7 @@ public class Atom03Generator extends BaseWireFeedGenerator {
 
         final String mode = content.getMode();
         if (mode != null) {
-            final Attribute modeAttribute = new Attribute("mode", mode);
+            final Attribute modeAttribute = new Attribute("mode", mode.toString());
             contentElement.setAttribute(modeAttribute);
         }
 

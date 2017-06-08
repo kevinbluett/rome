@@ -23,6 +23,10 @@ import com.rometools.rome.feed.impl.ObjectBean;
 
 /**
  * Bean for categories of RSS feeds.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ *
  */
 public class Category implements Cloneable, Serializable {
     private static final long serialVersionUID = 1L;
@@ -30,6 +34,11 @@ public class Category implements Cloneable, Serializable {
     private String domain;
     private String value;
 
+    /**
+     * Default constructor. All properties are set to <b>null</b>.
+     * <p>
+     *
+     */
     public Category() {
         objBean = new ObjectBean(this.getClass(), this);
     }

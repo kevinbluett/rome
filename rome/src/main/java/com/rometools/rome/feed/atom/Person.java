@@ -29,6 +29,10 @@ import com.rometools.utils.Lists;
 
 /**
  * Bean for person elements of Atom feeds.
+ * <p>
+ *
+ * @author Alejandro Abdelnur
+ * @author Dave Johnson (updated for Atom 1.0)
  */
 public class Person implements SyndPerson, Cloneable, Serializable, Extendable {
 
@@ -42,6 +46,11 @@ public class Person implements SyndPerson, Cloneable, Serializable, Extendable {
     private String email;
     private List<Module> modules;
 
+    /**
+     * Default constructor. All properties are set to <b>null</b>.
+     * <p>
+     *
+     */
     public Person() {
         objBean = new ObjectBean(this.getClass(), this);
     }

@@ -28,6 +28,9 @@ import com.rometools.rome.feed.rss.Item;
 /**
  * Feed Generator for RSS 0.93
  * <p/>
+ *
+ * @author Elaine Chien
+ *
  */
 public class RSS093Generator extends RSS092Generator {
 

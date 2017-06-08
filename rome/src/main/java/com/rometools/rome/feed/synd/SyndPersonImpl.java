@@ -27,6 +27,10 @@ import com.rometools.utils.Lists;
 
 /**
  * Bean for authors and contributors of SyndFeedImpl feeds and entries.
+ * <p>
+ *
+ * @author Dave Johnson
+ *
  */
 public class SyndPersonImpl implements Serializable, SyndPerson {
 

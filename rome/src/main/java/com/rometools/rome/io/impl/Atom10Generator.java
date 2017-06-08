@@ -46,6 +46,10 @@ import com.rometools.utils.Lists;
 /**
  * Feed Generator for Atom
  * <p/>
+ *
+ * @author Elaine Chien
+ * @author Dave Johnson (updated for Atom 1.0)
+ *
  */
 public class Atom10Generator extends BaseWireFeedGenerator {
 
@@ -318,11 +322,6 @@ public class Atom10Generator extends BaseWireFeedGenerator {
             final Element sourceElement = new Element("source", getFeedNamespace());
             populateFeedHeader(source, sourceElement);
             eEntry.addContent(sourceElement);
-        }
-
-        final String rights = entry.getRights();
-        if (rights != null) {
-            eEntry.addContent(generateSimpleElement("rights", rights));
         }
 
     }

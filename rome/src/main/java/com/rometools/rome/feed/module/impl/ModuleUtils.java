@@ -24,12 +24,11 @@ import org.slf4j.LoggerFactory;
 
 import com.rometools.rome.feed.module.Module;
 
+/**
+ */
 public class ModuleUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleUtils.class);
-
-    private ModuleUtils() {
-    }
 
     public static List<Module> cloneModules(final List<Module> modules) {
         List<Module> cModules = null;
@@ -53,6 +52,10 @@ public class ModuleUtils {
      *
      *
      * @since 1.5 Changed to return the first, not the last.
+     *
+     * @param modules
+     * @param uri
+     * @return
      */
     public static Module getModule(final List<Module> modules, final String uri) {
         Module searchedModule = null;

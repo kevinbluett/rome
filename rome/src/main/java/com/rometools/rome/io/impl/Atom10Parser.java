@@ -49,6 +49,8 @@ import com.rometools.utils.Lists;
 
 /**
  * Parser for Atom 1.0
+ *
+ * @author Dave Johnson
  */
 public class Atom10Parser extends BaseWireFeedParser {
 

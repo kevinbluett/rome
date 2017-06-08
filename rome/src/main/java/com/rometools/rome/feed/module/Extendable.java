@@ -21,6 +21,8 @@ import java.util.List;
 
 /**
  * Objects that can have modules are Extendable.
+ *
+ * @author Dave Johnson
  */
 public interface Extendable {
 
